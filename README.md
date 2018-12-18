@@ -8,7 +8,9 @@ Let me guess, your application needs to interact with a HTTP server to send and 
 pod 'GoldenRetriever', :git => 'https://github.com/darkFunction/GoldenRetriever'
 ```
 
-## Define your endpoints in one neat specification
+## 1. Define your endpoints in one neat specification
+
+Just implement the `Endpoint` protocol. 
 
 ```swift
 enum MyEndpoint: Endpoint {
@@ -34,13 +36,17 @@ enum MyEndpoint: Endpoint {
         }
     }
 }
+```
 
-// Define the JSON format the backend responds with for errors
+## 2. Define the format the backend responds with for errors 
+
+Implement `BackendErrorResponse`
+
+```swift
 public struct TSBackendErrorResponse: BackendErrorResponse {
     public let reason: String
 }
 ```
-
 
 ## Use it!
 
@@ -69,7 +75,8 @@ myClient.request(
   
 // Fetch tickets with custom decoding
 myClient.request(
-transform: { try myDecodeFunction($0) },
+  .tickets(filter: filter),
+  transform: { try myDecodeFunction($0) },
   .tickets(filter: filter),
   success: { (tickets: [Ticket]) in
 
