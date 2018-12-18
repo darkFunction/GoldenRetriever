@@ -14,6 +14,8 @@ public struct Client<EndpointType: Endpoint, ErrorResponseType: BackendErrorResp
     public typealias TransformedResponse<T> = (T) -> Void
     public typealias FailureBlock = (GRError) -> Void
     
+    public init() {}
+
     /**
      Requests data from an endpoint and transforms it, finally returning a response of the correct data type
      
