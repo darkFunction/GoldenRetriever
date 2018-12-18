@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GoldenRetriever"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "A friendly and light enum-based library to fetch your data from a HTTP/S endpoint."
   s.homepage     = "https://github.com/darkFunction/GoldenRetriever"
   s.license 		= { :type => "MIT", :file => "LICENSE" }
