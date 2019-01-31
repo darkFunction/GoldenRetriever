@@ -70,24 +70,26 @@ public struct Client<EndpointType: Endpoint, ErrorResponseType: BackendErrorResp
      Get raw data from endpoint
      */
     private func request(_ endpoint: EndpointType, completion: URLRequest.Response? = nil) {
-        if let url = endpoint.url {
-            var request = URLRequest(url: url)
-            request.httpMethod = endpoint.info.method.rawValue
-            if let body = endpoint.info.body {
-                do {
-                    try setBody(body, on: &request)
-                } catch {
-                    completion?(nil, nil, GRError.encoding)
-                    return
-                }
-            }
-            if let credentials = endpoint.info.credentials {
-                request.setValue(credentials.headerValue(), forHTTPHeaderField: "Authorization")
-            }
-            request.request(completion: completion)
-        } else {
+        guard let url = endpoint.url else {
             completion?(nil, nil, GRError.malformedUrl)
+            return
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.info.method.rawValue
+        if let body = endpoint.info.body {
+            do {
+                try setBody(body, on: &request)
+            } catch {
+                completion?(nil, nil, GRError.encoding)
+                return
+            }
+        }
+        if let credentials = endpoint.info.credentials {
+            request.setValue(credentials.headerValue(), forHTTPHeaderField: "Authorization")
+        }
+        request.request(completion: completion)
+    
     }
     
     private func setBody(_ body: EndpointInfo.BodyData, on request: inout URLRequest) throws {
