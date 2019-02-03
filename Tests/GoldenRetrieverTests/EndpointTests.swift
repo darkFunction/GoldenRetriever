@@ -3,7 +3,7 @@ import XCTest
 
 final class EndpointTests: XCTestCase {
     func testOneEmptyParameter() {
-        let endpoint = MockEndpoint.tickets(param1: nil, param2: "singleparam")
+        let endpoint = TestEndpoint.tickets(param1: nil, param2: "singleparam")
         guard let url = endpoint.url, let queryItems = URLComponents(string: url.absoluteString)?.queryItems else {
             XCTAssert(false, "URL construction failed")
             return
@@ -16,7 +16,7 @@ final class EndpointTests: XCTestCase {
     }
     
     func testTwoParameters() {
-        let endpoint = MockEndpoint.tickets(param1: "testparam", param2: "string with spaces")
+        let endpoint = TestEndpoint.tickets(param1: "testparam", param2: "string with spaces")
         guard let url = endpoint.url, let queryItems = URLComponents(string: url.absoluteString)?.queryItems else {
             XCTAssert(false, "URL construction failed")
             return

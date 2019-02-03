@@ -1,5 +1,5 @@
 //
-//  MockEndpoint.swift
+//  TestEndpoint.swift
 //  GoldenRetrieverTests
 //
 //  Created by Sam Taylor on 31/01/2019.
@@ -8,7 +8,7 @@
 import Foundation
 @testable import GoldenRetriever
 
-enum MockEndpoint: Endpoint {
+enum TestEndpoint: Endpoint {
     var baseAddress: URL {
         return URL(string: "https://example.com")!
     }

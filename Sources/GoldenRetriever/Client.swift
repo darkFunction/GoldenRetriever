@@ -14,7 +14,11 @@ public struct Client<EndpointType: Endpoint, ErrorResponseType: BackendErrorResp
     public typealias TransformedResponse<T> = (T) -> Void
     public typealias FailureBlock = (GRError) -> Void
     
-    public init() {}
+    private let networkSession: NetworkSession
+    
+    public init(networkSession: NetworkSession = URLSession.shared) {
+        self.networkSession = networkSession
+    }
 
     /**
      Requests data from an endpoint and transforms it, finally returning a response of the correct data type
@@ -69,7 +73,7 @@ public struct Client<EndpointType: Endpoint, ErrorResponseType: BackendErrorResp
     /**
      Get raw data from endpoint
      */
-    private func request(_ endpoint: EndpointType, completion: URLRequest.Response? = nil) {
+    private func request(_ endpoint: EndpointType, completion: NetworkSession.Response? = nil) {
         guard let url = endpoint.url else {
             completion?(nil, nil, GRError.malformedUrl)
             return
@@ -88,7 +92,7 @@ public struct Client<EndpointType: Endpoint, ErrorResponseType: BackendErrorResp
         if let credentials = endpoint.info.credentials {
             request.setValue(credentials.headerValue(), forHTTPHeaderField: "Authorization")
         }
-        request.request(completion: completion)
+        networkSession.request(request, completion: completion)
     
     }
     
@@ -123,14 +127,16 @@ public enum GRError: Error {
     }
 }
 
-public extension URLRequest {
-    public typealias Response = (Data?, URLResponse?, Error?) -> Void
-    
-    func request(completion: Response? = nil) {
-        let session = URLSession(configuration: URLSessionConfiguration.default)
-        session.dataTask(with: self) { (data, response, error) in
+public protocol NetworkSession {
+    typealias Response = (Data?, URLResponse?, Error?) -> Void
+    func request(_ request: URLRequest, completion: Response?)
+}
+
+extension URLSession: NetworkSession {
+    public func request(_ request: URLRequest, completion: Response?) {
+        dataTask(with: request) { (data, response, error) in
             completion?(data, response, error)
-            }.resume()
+        }.resume()
     }
 }
 
