@@ -77,7 +77,6 @@ myClient.request(
 myClient.request(
   .tickets(filter: filter),
   transform: { try myDecodeFunction($0) },
-  .tickets(filter: filter),
   success: { (tickets: [Ticket]) in
 
   },
